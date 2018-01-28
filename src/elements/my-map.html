@@ -1,0 +1,27 @@
+<link rel="import" href="../../bower_components/google-map/google-map.html">
+
+<dom-module id="my-map">
+  <template>
+    <style>
+      google-map {
+        height: 450px;
+        width: 1000px;
+      }
+    </style>
+
+    <div class="card">
+      <h1>EV Charger Station Map</h1>
+      <google-map fit-to-markers api-key="AIzaSyD3E1D9b-Z7ekrT3tbhl_dy8DCXuIuDDRc">
+        <google-map-marker latitude="37.78" longitude="-122.4" draggable="true"></google-map-marker>
+      </google-map>
+    </div>
+  </template>
+
+  <script>
+    class MyMap extends Polymer.Element {
+      static get is() { return 'my-map'; }
+    }
+
+    window.customElements.define(MyMap.is, MyMap);
+  </script>
+</dom-module>

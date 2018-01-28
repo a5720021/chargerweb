@@ -1,0 +1,31 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../shared-styles.html">
+
+<dom-module id="my-about">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+    </style>
+
+    <div class="card">
+      <h1>ขั้นตอนการชาร์จ</h1>
+      <p>1. ใช้ ChargePoint card กับเครื่องชาร์จเพื่อปลดล็อกช่องเสียบสายชาร์จ</p>
+      <p>2. กดปุ่มบนขั้วต่อเพื่อยกออกจากซองหนัง</p>
+      <p>3. เสียบปลั๊กเข้ากับ EV และกดปุ่มสีน้ำเงินเพื่อเริ่มชาร์จ</p>
+      <p>4. เราจะส่งข้อมูลอัปเดตเมื่อรถของคุณชาร์จเสร็จสิ้นและจะมีการเรียกเก็บเงิน</p>
+      <p>5. แตะการ์ดเพื่อสิ้นสุดการชาร์จและจะแสดงให้คุณเห็นว่ามีค่าใช้จ่ายเท่าไรและเราจะส่งใบเสร็จรับเงินให้คุณ</p>
+    </div>
+  </template>
+
+  <script>
+    class MyAbout extends Polymer.Element {
+      static get is() { return 'my-about'; }
+    }
+
+    window.customElements.define(MyAbout.is, MyAbout);
+  </script>
+</dom-module>

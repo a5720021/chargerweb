@@ -1,0 +1,28 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../shared-styles.html">
+
+<dom-module id="my-news">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+    </style>
+
+    <div class="card">
+      <div class="circle">T</div>
+      <h1>EV News 1</h1>
+      <p>Id nam odio natum malorum, tibique copiosae expetenda mel ea.Detracto suavitate repudiandae no eum. Id adhuc minim soluta nam.Id nam odio natum malorum, tibique copiosae expetenda mel ea.</p>
+    </div>
+  </template>
+
+  <script>
+    class MyNews extends Polymer.Element {
+      static get is() { return 'my-news'; }
+    }
+
+    window.customElements.define(MyNews.is, MyNews);
+  </script>
+</dom-module>

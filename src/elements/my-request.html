@@ -1,0 +1,50 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../shared-styles.html">
+
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+
+<dom-module id="my-request">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        padding: 10px;
+      }
+      paper-input {
+        max-width: 600px;
+      }
+      paper-button.indigo {
+        background-color: var(--paper-indigo-500);
+        color: white;
+        --paper-button-raised-keyboard-focus: {
+          background-color: var(--paper-pink-a200) !important;
+          color: white !important;
+        };
+      }
+      paper-button.indigo:hover {
+        background-color: var(--paper-indigo-400);
+      }
+      </style>
+
+    <div class="card">
+      <h1>Charging Station Installation</h1>
+      <paper-input always-float-label label="ติดตั้งแบบธุรกิจหรือติดตั้งที่บ้าน"></paper-input>
+      <paper-input always-float-label label="จำนวนเครื่องชาร์จ"></paper-input>
+      <paper-input always-float-label label="ที่อยู่"></paper-input>
+      <paper-input always-float-label label="ชื่อจริง"></paper-input>
+      <paper-input always-float-label label="นามสกุล"></paper-input>
+      <paper-input always-float-label label="E-mail"></paper-input>
+      <paper-input always-float-label label="เบอร์โทรติดต่อ"></paper-input>
+      <paper-button raised class="indigo">Submit</paper-button>
+    </div>
+  </template>
+
+  <script>
+    class MyRequest extends Polymer.Element {
+      static get is() { return 'my-request'; }
+    }
+
+    window.customElements.define(MyRequest.is, MyRequest);
+  </script>
+</dom-module>
