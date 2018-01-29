@@ -11,8 +11,8 @@
 
     <div class="card">
       <h1>EV Charger Station Map</h1>
-      <google-map fit-to-markers api-key="AIzaSyD3E1D9b-Z7ekrT3tbhl_dy8DCXuIuDDRc">
-        <google-map-marker latitude="37.78" longitude="-122.4" draggable="true"></google-map-marker>
+      <google-map api-key="AIzaSyD3E1D9b-Z7ekrT3tbhl_dy8DCXuIuDDRc">
+        <google-map-marker latitude=[[latitude]] longitude=[[longtitude]]></google-map-marker>
       </google-map>
     </div>
   </template>
@@ -20,6 +20,33 @@
   <script>
     class MyMap extends Polymer.Element {
       static get is() { return 'my-map'; }
+      static get properties() {
+        return {
+          latitude: {
+            type: String,
+            value: '0'
+          },
+          longtitude: {
+            type: String,
+            value: '0'
+          },
+          elementId: String
+        };
+      }
+
+      updateLocation(e) {
+        //console.log(this.latitude);
+        this.dispatchEvent(
+          new CustomEvent('updateLocation', {
+            bubbles: true, composed: true,
+            detail: {
+              id:this.elementId,
+              latitude: this.latitude,
+              longtitude: this.longtitude
+            }
+          })
+        );
+      }
     }
 
     window.customElements.define(MyMap.is, MyMap);
