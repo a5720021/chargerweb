@@ -29,38 +29,32 @@
   <script>
     class MyMap extends Polymer.Element {
       static get is() { return 'my-map'; }
-
       static get properties() {
         return {
-          gmap:{
-            type: Object
+          latitude: {
+            type: String,
+            value: '0'
           },
-          position: {
-            type: Object
-          }
+          longtitude: {
+            type: String,
+            value: '0'
+          },
+          elementId: String
         };
       }
 
-      ready() {
-        super.ready();
-      }
-
-      _myLocation(e){
-        this.gmap = e.currentTarget.map;
-        navigator.geolocation.getCurrentPosition((xposition) => {
-            this.position.lat = xposition.coords.latitude;
-            this.position.lng = xposition.coords.longtitude;
-            console.log("here");
-         });
-        // if(this.gmap){
-        //       var c = { lat: parseFloat(this.position.lat), lng: parseFloat(this.position.lng) };
-        //       console.log(c);
-        //       this.gmap.setCenter(c);
-        //       this.marker = new google.maps.Marker({
-        //         position: c,
-        //         map: this.gmap
-        //       });
-        //     }
+      updateLocation(e) {
+        //console.log(this.latitude);
+        this.dispatchEvent(
+          new CustomEvent('updateLocation', {
+            bubbles: true, composed: true,
+            detail: {
+              id:this.elementId,
+              latitude: this.latitude,
+              longtitude: this.longtitude
+            }
+          })
+        );
       }
     }
 
