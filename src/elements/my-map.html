@@ -14,8 +14,8 @@
 
     <div class="card">
       <!-- <h1>Charge Point</h1> -->
-      <google-map fit-to-markers api-key="AIzaSyD3E1D9b-Z7ekrT3tbhl_dy8DCXuIuDDRc">
-        <google-map-marker latitude="37.78" longitude="-122.4" draggable="true"></google-map-marker>
+      <google-map fit-to-markers on-google-map-ready='_myLocation' api-key="AIzaSyD3E1D9b-Z7ekrT3tbhl_dy8DCXuIuDDRc">
+        <!-- <google-map-marker latitude="{{position.lat}}" longitude="{{position.lng}}"></google-map-marker> -->
       </google-map>
     </div>
   </template>
@@ -26,9 +26,12 @@
 
       static get properties() {
         return {
-          position: {
-            type: Object,
+          gmap:{
+            type: Object
           },
+          position: {
+            type: Object
+          }
         };
       }
 
@@ -36,6 +39,23 @@
         super.ready();
       }
 
+      _myLocation(e){
+        this.gmap = e.currentTarget.map;
+        navigator.geolocation.getCurrentPosition((xposition) => {
+            this.position.lat = xposition.coords.latitude;
+            this.position.lng = xposition.coords.longtitude;
+            console.log("here");
+         });
+        // if(this.gmap){
+        //       var c = { lat: parseFloat(this.position.lat), lng: parseFloat(this.position.lng) };
+        //       console.log(c);
+        //       this.gmap.setCenter(c);
+        //       this.marker = new google.maps.Marker({
+        //         position: c,
+        //         map: this.gmap
+        //       });
+        //     }
+      }
     }
 
     window.customElements.define(MyMap.is, MyMap);

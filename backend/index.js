@@ -21,7 +21,7 @@ var database = firebase.database();
 var conIO = [];
 io.on('connection', function (socket) {
     conIO.push(socket)
-    // console.log('SK');
+    console.log('SK');
     // socket.emit('news', { hello: 'world' });
     // socket.on('my other event', function (data) {
     //     console.log(data);
@@ -41,6 +41,8 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 app.use(cors())
+
+
 
 server.listen(3000, function () {
     console.log('Example app listening on port 3000!')
