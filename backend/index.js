@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 const express = require('express')
 var cors = require('cors')
 const app = express()
@@ -48,21 +47,3 @@ app.use(cors())
 server.listen(3000, function () {
     console.log('Example app listening on port 3000!')
 })
-=======
-var express = require('express');
-var app = express();
-var expressWs = require('express-ws')(app);
-var firebase = require("firebase");
-
-// Firebase config
-var config = {
-  apiKey: "AIzaSyDpBtpDYu0a4roRChP0yWBgAu9yPB3lrjc",
-  authDomain: "ocpp-database.firebaseapp.com",
-  databaseURL: "https://ocpp-database.firebaseio.com",
-  storageBucket: "ocpp-database.appspot.com",
-};
-firebase.initializeApp(config);
-
-// Get a reference to the database service
-var database = firebase.database();
->>>>>>> ca48839ed3788b466bb5a8037d2b8c80b34dee27
