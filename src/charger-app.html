@@ -17,15 +17,16 @@
 <custom-style>
   <style is="custom-style">
 
-    /* :host {
-      display: block;
+    :host {
+      /* display: block;
       width: 100%;
       height: 100%;
       overflow: auto;
       padding: 0.5rem;
                 box-sizing: border-box;
-                border-radius: 10px;
-    } */
+                border-radius: 10px; */
+                margin: auto;
+    } 
 
     html, body {
       margin: 0;
@@ -155,12 +156,12 @@
           </app-toolbar>
         </app-header>
 
-        <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="view404" role="main">
+        <iron-pages selected="[[page]]" attr-for-selected="name" style="width:100%; height:100%;" fallback-selection="view404" role="main">
           <my-about name="about"></my-about>
           <my-news name="news"></my-news>
           <my-request name="request"></my-request>
           <my-account name="account"></my-account>
-          <my-map name="map"></my-map>
+          <my-map name="map" style="width:100%; height:100%"></my-map>
           <my-view404 name="view404"></my-view404>
         </iron-pages>
       </app-header-layout>
