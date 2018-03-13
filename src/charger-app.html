@@ -1,4 +1,5 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+<script src="./../bower_components/axios/dist/axios.min.js"></script>
 <link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
 <link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
@@ -9,17 +10,36 @@
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<script src="https://www.gstatic.com/firebasejs/4.9.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.9.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.9.1/firebase-database.js"></script>>
 
 <custom-style>
   <style is="custom-style">
+
+    :host {
+      /* display: block;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      padding: 0.5rem;
+                box-sizing: border-box;
+                border-radius: 10px; */
+                margin: auto;
+    } 
+
     html, body {
       margin: 0;
       font-family: 'Roboto', 'Noto', sans-serif;
-      -webkit-font-smoothing: antialiased;
+      /* -webkit-font-smoothing: antialiased; */
       background: #f1f1f1;
       max-height: 368px;
     }
+
     app-toolbar {
       background-color: #4285f4;
       color: #fff;
@@ -96,6 +116,11 @@
         color: black;
         font-weight: bold;
       }
+
+      paper-button.fancy {
+        font-size: 20px;
+      }
+
     </style>
 
     <app-location route="{{route}}" url-space-regex="^[[rootPath]]"></app-location>
@@ -128,19 +153,34 @@
           <app-toolbar>
             <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
             <div main-title>EV Charger Station</div>
+            <paper-button style="margin-right:-5px;" on-click="openDialog">
+              <iron-icon style="margin-right: 2px;" icon="account-circle"></iron-icon>
+              login
+            </paper-button>
           </app-toolbar>
         </app-header>
 
-        <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="view404" role="main">
+        <iron-pages selected="[[page]]" attr-for-selected="name" style="width:100%; height:100%;" fallback-selection="view404" role="main">
           <my-about name="about"></my-about>
           <my-news name="news"></my-news>
           <my-request name="request"></my-request>
           <my-account name="account"></my-account>
-          <my-map name="map"></my-map>
+          <my-map name="map" style="width:100%; height:100%"></my-map>
           <my-view404 name="view404"></my-view404>
         </iron-pages>
       </app-header-layout>
     </app-drawer-layout>
+    
+    <paper-dialog id="dialog" modal>
+        <h2>Authentication</h2>
+        <paper-input always-float-label label="Username" value="{{user}}"></paper-input>
+        <paper-input always-float-label label="Password" type="password" value="{{password}}"></paper-input><br>
+        <div class="buttons">
+          <paper-button dialog-dismiss on-click="authUser">Sign-in</paper-button>
+          <paper-button dialog-dismiss on-click="logout">Close</paper-button><br/>
+        </div>
+    </paper-dialog>
+
   </template>
 
   <script>
@@ -159,6 +199,15 @@
           // This shouldn't be neccessary, but the Analyzer isn't picking up
           // Polymer.Element#rootPath
           rootPath: String,
+          user: {
+            type: String,
+            //notify:true,
+            //value:"test",
+          },
+          password: {
+            type:String,
+          },
+          session:Object
         };
       }
 
@@ -166,6 +215,12 @@
         return [
           '_routePageChanged(routeData.page)',
         ];
+      }
+
+      ready(){
+        super.ready();
+        this._firebaseconfig();
+        this._checkuser();
       }
 
       _routePageChanged(page) {
@@ -192,6 +247,61 @@
       _showPage404() {
         this.page = 'view404';
       }
+
+      logout(){
+        axios.get('http://localhost:3000/destroy').then((response) => {
+            console.log(response);
+        });
+      }
+
+      _checkuser(){
+        // var user = firebase.auth().currentUser;
+        // if (user) {
+        //   console.log("User is signed in");
+        // } else {
+        //   console.log("No user is signed in")
+        // }
+        axios.get('http://localhost:3000/chksession').then((response) => {
+            console.log(response);
+        });
+      }
+
+      _firebaseconfig(){
+        var config = {
+            apiKey: "AIzaSyDpBtpDYu0a4roRChP0yWBgAu9yPB3lrjc",
+            authDomain: "ocpp-database.firebaseapp.com",
+            databaseURL: "https://ocpp-database.firebaseio.com",
+            storageBucket: "ocpp-database.appspot.com",
+          };
+        firebase.initializeApp(config);
+      }
+
+      openDialog(){
+        this.$.dialog.open();
+      }
+
+      authUser(){
+        // firebase.auth().signInWithEmailAndPassword(this.user, this.password).catch(function(error) {
+        //   // Handle Errors here.
+        //   var errorCode = error.code;
+        //   var errorMessage = error.message;
+        //   console.log(errorCode,errorMessage);
+        // });
+        // console.log(firebase.auth().currentUser);  
+
+        axios.post('http://localhost:3000/auth'
+          ,{
+            username : this.user,
+            password : this.password
+          })
+          .then(function(response){
+            console.log(response.data);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
+
     }
 
     window.customElements.define(ChargerApp.is, ChargerApp);

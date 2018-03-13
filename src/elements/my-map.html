@@ -3,16 +3,33 @@
 <dom-module id="my-map">
   <template>
     <style>
+
+       :host {
+        display: block;
+        width:100%;
+        height:100%;
+      }
       google-map {
-        height: 450px;
-        width: 1000px;
+        /* position: absolute; */
+        width:100%;
+        height:100%;
+        /* width: 100%; */
       }
     </style>
 
+<<<<<<< HEAD
     <div class="card">
       <h1>EV Charger Station Map</h1>
       <google-map fit-to-markers = "true" api-key="AIzaSyAL0LpZixIK5b6j6cQIv9Pk77S2v3Tj8dE">
         <google-map-marker latitude=[[latitude]] longitude=[[longtitude]] ></google-map-marker>
+=======
+    <div class="card" style="width:100%; height:100%;">
+      <!-- <h1>Charge Point</h1> -->
+      <google-map fit-to-markers latitude="13.736" longitude="100.523" api-key="AIzaSyCYjysZzUoJZnWwvcztEqnXaYKsZniP0-E">
+        <google-map-marker latitude="13.775" longitude="100.65"></google-map-marker>
+        <google-map-marker latitude="13.736" longitude="100.523"></google-map-marker>
+        <google-map-marker latitude="13.86" longitude="100.73"></google-map-marker>
+>>>>>>> 8fed9f902d4cc830c6b08c16afa004be27f05f83
       </google-map>
     </div>
   </template>
