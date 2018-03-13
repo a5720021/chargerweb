@@ -11,8 +11,8 @@
 
     <div class="card">
       <h1>EV Charger Station Map</h1>
-      <google-map api-key="AIzaSyD3E1D9b-Z7ekrT3tbhl_dy8DCXuIuDDRc">
-        <google-map-marker latitude=[[latitude]] longitude=[[longtitude]]></google-map-marker>
+      <google-map fit-to-markers = "true" api-key="AIzaSyAL0LpZixIK5b6j6cQIv9Pk77S2v3Tj8dE">
+        <google-map-marker latitude=[[latitude]] longitude=[[longtitude]] ></google-map-marker>
       </google-map>
     </div>
   </template>
@@ -24,11 +24,11 @@
         return {
           latitude: {
             type: String,
-            value: '0'
+            value: '13.45'
           },
           longtitude: {
             type: String,
-            value: '0'
+            value: '100.31'
           },
           elementId: String
         };
