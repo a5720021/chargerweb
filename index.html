@@ -1,68 +1,103 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="generator" content="Polymer Starter Kit">
-    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-    <title>My App</title>
-    <meta name="description" content="My App description">
-    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Polymer Starter Kit">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-    <script>
-      /**
-      * [polymer-root-path]
-      *
-      * By default, we set `Polymer.rootPath` to the server root path (`/`).
-      * Leave this line unchanged if you intend to serve your app from the root
-      * path (e.g., with URLs like `my.domain/` and `my.domain/view1`).
-      *
-      * If you intend to serve your app from a non-root path (e.g., with URLs
-      * like `my.domain/my-app/` and `my.domain/my-app/view1`), edit this line
-      * to indicate the path from which you'll be serving, including leading
-      * and trailing slashes (e.g., `/my-app/`).
-      */
-      window.Polymer = {rootPath: '/'};
+  <title>My App</title>
+  <meta name="description" content="My App description">
+  <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 
-      // Load and register pre-caching Service Worker
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
-          navigator.serviceWorker.register('service-worker.js', {
-            scope: Polymer.rootPath,
-          });
+  <script>
+    /**
+    * [polymer-root-path]
+    *
+    * By default, we set `Polymer.rootPath` to the server root path (`/`).
+    * Leave this line unchanged if you intend to serve your app from the root
+    * path (e.g., with URLs like `my.domain/` and `my.domain/view1`).
+    *
+    * If you intend to serve your app from a non-root path (e.g., with URLs
+    * like `my.domain/my-app/` and `my.domain/my-app/view1`), edit this line
+    * to indicate the path from which you'll be serving, including leading
+    * and trailing slashes (e.g., `/my-app/`).
+    */
+    // window.Polymer = {rootPath: '/'};
+
+    // Load and register pre-caching Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('service-worker.js', {
+          scope: Polymer.rootPath,
         });
-      }
-      
-      var socket = io.connect('http://localhost:3000');
+      });
+    }
+
+    var socket = io.connect('http://localhost:3000');
       // socket.on('update', function (data) {
       //   console.log(data);
       //   // socket.emit('my other event', { my: 'data' });
       // });
 
-    </script>
+  </script>
 
-    <!-- Load webcomponents-loader.js to check and load any polyfills your browser needs -->
-    <script src="bower_components/webcomponentsjs/webcomponents-loader.js"></script>
+  
+<script src="https://www.gstatic.com/firebasejs/4.11.0/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyDpBtpDYu0a4roRChP0yWBgAu9yPB3lrjc",
+    authDomain: "ocpp-database.firebaseapp.com",
+    databaseURL: "https://ocpp-database.firebaseio.com",
+    projectId: "ocpp-database",
+    storageBucket: "ocpp-database.appspot.com",
+    messagingSenderId: "866828196574"
+  };
+  firebase.initializeApp(config);
+</script>
+<script src="index.js"></script>
 
-    <!-- Load your application shell -->
-    <link rel="import" href="src/charger-app.html">
+  <!-- Load webcomponents-loader.js to check and load any polyfills your browser needs -->
+  <script src="bower_components/webcomponentsjs/webcomponents-loader.js"></script>
 
-    <!-- Add any global styles for body, document, etc. -->
-    <style>
+  <!-- Load your application shell -->
+  <!-- <link rel="import" href="src/charger-app.html"> -->
+  <link rel="import" href="src/login-charger-app.html">
+
+  <!-- Add any global styles for body, document, etc. -->
+  <!-- <style>
       body {
-        margin: 0;
+        margin: 0px;
         font-family: 'Roboto', 'Noto', sans-serif;
         line-height: 1.5;
         min-height: 100vh;
         background-color: #eeeeee;
       }
-    </style>
-  </head>
-  <body>
-    <charger-app></charger-app>
-    <noscript>
-      Please enable JavaScript to view this website.
-    </noscript>
-    <!-- Built with love using Polymer Starter Kit -->
-  </body>
+    </style> -->
+</head>
+
+<body>
+  <div id="login_div" style="display: block;" class="main-div">
+    <h3>Welcome EV Charger Station</h3>
+    <input type="email" placeholder="Email..." / id="email_user">
+    <input type="password" placeholder="Password..." / id="password_user">
+
+    <button onclick="login()">Login to Account</button>
+  </div>
+
+  <div id="logout_div" style="display: none;" class="logout-div">
+    <p id="user_id">...</p>
+    <button onclick="logout()">Logout</button>
+  </div>
+  <!-- <login-charger-app></login-charger-app> -->
+  <!-- <charger-app></charger-app> -->
+  <noscript>
+    Please enable JavaScript to view this website.
+  </noscript>
+  <!-- Built with love using Polymer Starter Kit -->
+</body>
+
 </html>
