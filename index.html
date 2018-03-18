@@ -11,6 +11,7 @@
   <script src="http://localhost:3000/socket.io/socket.io.js"></script>
   <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <link rel="import" href="./src/Firebase.html">
 
   <script>
     /**
@@ -25,7 +26,7 @@
     * to indicate the path from which you'll be serving, including leading
     * and trailing slashes (e.g., `/my-app/`).
     */
-    // window.Polymer = {rootPath: '/'};
+    window.Polymer = {rootPath: '/'};
 
     // Load and register pre-caching Service Worker
     if ('serviceWorker' in navigator) {
@@ -64,7 +65,7 @@
   <script src="bower_components/webcomponentsjs/webcomponents-loader.js"></script>
 
   <!-- Load your application shell -->
-  <!-- <link rel="import" href="src/charger-app.html"> -->
+  <link rel="import" href="src/charger-app.html">
   <link rel="import" href="src/login-charger-app.html">
 
   <!-- Add any global styles for body, document, etc. -->
@@ -80,7 +81,7 @@
 </head>
 
 <body>
-  <div id="login_div" style="display: block;" class="main-div">
+  <!-- <div id="login_div" style="display: block;" class="main-div">
     <h3>Welcome EV Charger Station</h3>
     <input type="email" placeholder="Email..." / id="email_user">
     <input type="password" placeholder="Password..." / id="password_user">
@@ -91,9 +92,9 @@
   <div id="logout_div" style="display: none;" class="logout-div">
     <p id="user_id">...</p>
     <button onclick="logout()">Logout</button>
-  </div>
+  </div> -->
   <!-- <login-charger-app></login-charger-app> -->
-  <!-- <charger-app></charger-app> -->
+  <charger-app></charger-app>
   <noscript>
     Please enable JavaScript to view this website.
   </noscript>

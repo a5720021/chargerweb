@@ -1,0 +1,41 @@
+<script src="https://www.gstatic.com/firebasejs/4.9.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.9.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.9.1/firebase-database.js"></script>
+
+<script>
+    class Firebase {
+
+        constructor(){
+            var config = {
+            apiKey: "AIzaSyDpBtpDYu0a4roRChP0yWBgAu9yPB3lrjc",
+            authDomain: "ocpp-database.firebaseapp.com",
+            databaseURL: "https://ocpp-database.firebaseio.com",
+            storageBucket: "ocpp-database.appspot.com",
+            };
+            firebase.initializeApp(config);
+        }
+
+        test(){
+            console.log("test");
+        }
+
+        db(){
+            return firebase.database();
+        }
+
+        allMarker(callback){
+            var arr = [];
+            fb.db().ref('/chargerstation').on('value', function(snapshot) {
+                snapshot.forEach(function(childSnapshot) {
+                    var childData = childSnapshot.val();
+                    
+                    arr.push(childData.position);
+                });
+                callback(arr);
+            });
+        }
+    }
+
+    window.fb = new Firebase();
+
+</script>
