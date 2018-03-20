@@ -1,4 +1,6 @@
 <link rel="import" href="../../bower_components/google-map/google-map.html">
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/polymer/lib/elements/dom-repeat.html">
 
 <dom-module id="my-map">
   <template>
@@ -10,19 +12,16 @@
         height:100%;
       }
       google-map {
-        /* position: absolute; */
         width:100%;
         height:100%;
-        /* width: 100%; */
       }
     </style>
 
     <div class="card" style="width:100%; height:100%;">
-      <!-- <h1>Charge Point</h1> -->
       <google-map fit-to-markers latitude="13.736" longitude="100.523" api-key="AIzaSyCYjysZzUoJZnWwvcztEqnXaYKsZniP0-E">
-        <google-map-marker latitude="13.775" longitude="100.65"></google-map-marker>
-        <google-map-marker latitude="13.736" longitude="100.523"></google-map-marker>
-        <google-map-marker latitude="13.86" longitude="100.73"></google-map-marker>
+        <template is="dom-repeat" items="{{position}}">
+          <google-map-marker latitude="[[item.lat]]" longitude="[[item.lng]]"></google-map-marker>
+        </template>
       </google-map>
     </div>
   </template>
@@ -32,30 +31,15 @@
       static get is() { return 'my-map'; }
       static get properties() {
         return {
-          latitude: {
-            type: String,
-            value: '13.45'
-          },
-          longtitude: {
-            type: String,
-            value: '100.31'
-          },
-          elementId: String
+          position:{
+            type:Array,
+          }
         };
       }
 
-      updateLocation(e) {
-        //console.log(this.latitude);
-        this.dispatchEvent(
-          new CustomEvent('updateLocation', {
-            bubbles: true, composed: true,
-            detail: {
-              id:this.elementId,
-              latitude: this.latitude,
-              longtitude: this.longtitude
-            }
-          })
-        );
+      ready(){
+        super.ready();
+        fb.allMarker(pos => { this.position = pos }); //query all marker from firebase
       }
     }
 
