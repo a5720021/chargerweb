@@ -34,7 +34,7 @@
     <paper-dialog id="reserveBox">
       <h2>[[markername]]</h2>
       <template is="dom-repeat" items="{{content}}">
-        <p><u>Connector[[item.index]] </u>: Meter Value : [[item.metervalue]] Status : [[item.status]] 
+        <p><u>Connector[[item.index]]</u> : Meter Value : [[item.metervalue]] Status : [[item.status]] 
         <template is="dom-if" if="{{item.buttonstatus}}">
           <paper-button dialog-confirm id=[[item.index]] class="green" on-click="sendReserve">จอง</paper-button></p>
         </template>
@@ -43,15 +43,6 @@
         <paper-button dialog-confirm autofocus>ปิด</paper-button>
       </div>
       <!-- <paper-progress id="progress" indeterminate></paper-progress> -->
-    </paper-dialog>
-
-    <paper-dialog id="reserveprogress" style="width:50%;">
-        <h2><div id="textres">Waiting</div></h2>
-        <center><paper-spinner-lite id="progress" style="width:300px;height:300px;" active></paper-spinner-lite></center>
-        <p><div id="log"></div></p>
-        <div class="buttons">
-          <paper-button id="closebt" dialog-confirm on-click="clearValue">ปิด</paper-button>
-        </div>
     </paper-dialog>
 
     <div class="card" style="width:100%; height:100%;">
@@ -142,24 +133,18 @@
       }
 
       sendReserve(e){
-        var connectorId = e.currentTarget.id;
-        this.$.reserveprogress.open();
-        this.$.progress.style = "display:block;";
-        this.$.closebt.disabled = true;
-        setTimeout(() => {
-          this.$.closebt.disabled = false;
-          this.$.progress.style = "display:none;";
-          this.$.textres.innerHTML = "Reserved";
-          this.$.log.innerHTML = "ChargerID : "+this.markername+" ConnectorID : "+connectorId;
-        }, 5000);
+        this.dispatchEvent(
+          new CustomEvent('sendReserve', {
+            bubbles: true, composed: true,
+            detail: {
+              conid : e.currentTarget.id,
+              cpid : this.markername
+            }
+          })
+        );
+        //var connectorId = e.currentTarget.id;
+        
         //console.log("ChargerId : ",this.markername,"ConnectorId : ",connectorId);
-      }
-
-      clearValue(){
-        
-        
-        this.$.log.innerHTML = "";
-        this.$.textres.innerHTML = "Waiting";
       }
 
     }
