@@ -5,33 +5,44 @@
 <script>
     class Firebase {
 
-        constructor(){
+        constructor() {
             var config = {
-            apiKey: "AIzaSyDpBtpDYu0a4roRChP0yWBgAu9yPB3lrjc",
-            authDomain: "ocpp-database.firebaseapp.com",
-            databaseURL: "https://ocpp-database.firebaseio.com",
-            storageBucket: "ocpp-database.appspot.com",
+                apiKey: "AIzaSyDpBtpDYu0a4roRChP0yWBgAu9yPB3lrjc",
+                authDomain: "ocpp-database.firebaseapp.com",
+                databaseURL: "https://ocpp-database.firebaseio.com",
+                storageBucket: "ocpp-database.appspot.com",
             };
             firebase.initializeApp(config);
         }
 
-        test(){
+        test() {
             console.log("test");
         }
 
-        db(){
+        db() {
             return firebase.database();
         }
 
-        allMarker(callback){
+        allMarker(callback) {
             var arr = [];
-            fb.db().ref('/chargerstation').on('value', function(snapshot) {
-                snapshot.forEach(function(childSnapshot) {
+            fb.db().ref('/chargerstation').on('value', function (snapshot) {
+                snapshot.forEach(function (childSnapshot) {
                     var childData = childSnapshot.val();
-                    
+
                     arr.push(childData.position);
                 });
                 callback(arr);
+            });
+        }
+        checkLogin() {
+            // var arr = [];
+            fb.db().ref('authorize').orderByChild('email').equalTo('a5720187@gmail.com').on('value', function (snapshot) {
+                console.log(snapshot.val());
+                snapshot.forEach(function (childSnapshot) {
+                    // var childData = childSnapshot.val();
+                    console.log(childSnapshot.key);
+                    // console.log(childSnapshot.val());
+                });
             });
         }
     }

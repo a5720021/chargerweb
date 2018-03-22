@@ -132,6 +132,7 @@
           <a name="view3" href="[[rootPath]]account">Account / Billing</a>
           <a name="view4" href="[[rootPath]]request">Request Station</a>
           <a name="view5" href="[[rootPath]]map">Find Station / Reserve</a>
+          <a name="view6" href="[[rootPath]]login">Login</a>
         </iron-selector>
       </app-drawer>
 
@@ -142,10 +143,10 @@
           <app-toolbar>
             <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
             <div main-title>EV Charger Station</div>
-            <paper-button style="margin-right:-5px;" on-click="openDialog">
+            <!-- <paper-button style="margin-right:-5px;" on-click="openDialog">
               <iron-icon style="margin-right: 2px;" icon="account-circle"></iron-icon>
               login
-            </paper-button>
+            </paper-button> -->
           </app-toolbar>
         </app-header>
 
@@ -155,6 +156,7 @@
           <my-request name="request"></my-request>
           <my-account name="account"></my-account>
           <my-map name="map" style="width:100%; height:100%"></my-map>
+          <my-login name="login"></my-login>
           <my-view404 name="view404"></my-view404>
         </iron-pages>
       </app-header-layout>
@@ -258,9 +260,9 @@
       //   });
       // }
 
-      openDialog(){
-        this.$.dialog.open();
-      }
+      // openDialog(){
+      //   this.$.dialog.open();
+      // }
 
       // authUser(){
       //   // firebase.auth().signInWithEmailAndPassword(this.user, this.password).catch(function(error) {
