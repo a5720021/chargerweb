@@ -110,11 +110,11 @@
             }
             ready() {
                 super.ready();
-                // fb.checkLogin(); //query all marker from firebase
             }
             login(){
-                console.log(this.userEmail);
-                console.log(this.passWord);
+                fb.checkLogin(this.userEmail,this.passWord); //query all marker from firebase
+                // console.log(this.userEmail);
+                // console.log(this.passWord);
             }
         }
         window.customElements.define(MyLogin.is, MyLogin);

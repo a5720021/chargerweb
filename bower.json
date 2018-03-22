@@ -21,13 +21,9 @@
     "iron-icon": "PolymerElements/iron-icon#^2.0.1",
     "iron-icons": "PolymerElements/iron-icons#^2.0.1",
     "paper-dialog": "PolymerElements/paper-dialog#^2.0.1",
-<<<<<<< HEAD
-    "login-fire": "^1.1.0"
-=======
     "neon-animation": "PolymerElements/neon-animation#^2.2.1",
     "paper-progress": "PolymerElements/paper-progress#^2.1.0",
     "paper-spinner": "PolymerElements/paper-spinner#^2.1.0"
->>>>>>> f098e1f93707c724d7c1c04c94c7d1aba7f349f7
   },
   "resolutions": {
     "polymer": "^2.0.0"

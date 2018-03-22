@@ -26,30 +26,27 @@
 
         allMarker(callback) {
             var arr = [];
-<<<<<<< HEAD
-            fb.db().ref('/chargerstation').on('value', function (snapshot) {
-                snapshot.forEach(function (childSnapshot) {
-                    var childData = childSnapshot.val();
-
-                    arr.push(childData.position);
-=======
             fb.db().ref('/chargerstation').on('value', function(snapshot) {
                 snapshot.forEach(function(childSnapshot) {
                     var cpid = childSnapshot.key;
                     var childData = childSnapshot.val();
                     arr.push({id:cpid,pos:childData.position,con:childData.connector});
->>>>>>> f098e1f93707c724d7c1c04c94c7d1aba7f349f7
                 });
                 callback(arr);
             });
         }
-        checkLogin() {
+        checkLogin(email,pass) {
+            console.log(email,pass);
             // var arr = [];
-            fb.db().ref('authorize').orderByChild('email').equalTo('a5720187@gmail.com').on('value', function (snapshot) {
-                console.log(snapshot.val());
+            fb.db().ref('authorize').orderByChild('email').equalTo(email).on('value', function (snapshot) {
+                // console.log(snapshot.val());
                 snapshot.forEach(function (childSnapshot) {
+                    if(childSnapshot.val().password == pass && childSnapshot.val().email == email){
+                        console.log(childSnapshot.key);
+                    }else{
+                        console.log("Error");
+                    }
                     // var childData = childSnapshot.val();
-                    console.log(childSnapshot.key);
                     // console.log(childSnapshot.val());
                 });
             });
