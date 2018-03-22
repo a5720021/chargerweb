@@ -72,7 +72,6 @@
       :host {
         --app-primary-color: #4285f4;
         --app-secondary-color: black;
-
         display: block;
       }
 
@@ -172,6 +171,15 @@
         </div>
     </paper-dialog> -->
 
+    <paper-dialog id="reserveprogress" style="width:50%;" modal>
+      <h2><div id="textres">Waiting</div></h2>
+      <center><paper-spinner-lite id="progress" active></paper-spinner-lite></center>
+      <p><div id="log"></div></p>
+      <div class="buttons">
+        <paper-button id="closebt" dialog-confirm on-click="clearinnerValue">ปิด</paper-button>
+      </div>
+  </paper-dialog>
+
   </template>
 
   <script>
@@ -190,17 +198,17 @@
           // This shouldn't be neccessary, but the Analyzer isn't picking up
           // Polymer.Element#rootPath
           rootPath: String,
-          user: {
-            type: String,
-            //notify:true,
-            //value:"test",
-          },
-          password: {
-            type:String,
-          },
-          PositionArray: {
-            type:Array
-          }
+          // user: {
+          //   type: String,
+          //   //notify:true,
+          //   //value:"test",
+          // },
+          // password: {
+          //   type:String,
+          // },
+          // PositionArray: {
+          //   type:Array
+          // }
         };
       }
 
@@ -212,7 +220,7 @@
 
       ready(){
         super.ready();
-        
+        this.addEventListener('sendReserve', e => this._sendReserve(e));
         //this._firebaseconfig();
         //this._checkuser();
       }
@@ -285,6 +293,23 @@
       //       console.log(error);
       //     });
       // }
+
+      _sendReserve(e){
+        this.$.reserveprogress.open();
+        this.$.progress.style = "display:block;";
+        this.$.closebt.disabled = true;
+        setTimeout(() => {
+          this.$.closebt.disabled = false;
+          this.$.progress.style = "display:none;";
+          this.$.textres.innerHTML = "Reserved";
+          this.$.log.innerHTML = "ChargerID : "+e.detail.cpid+" ConnectorID : "+e.detail.conid;
+        }, 5000);
+      }
+
+      clearinnerValue(){
+        this.$.log.innerHTML = "";
+        this.$.textres.innerHTML = "Waiting";
+      }
 
     }
 
