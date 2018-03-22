@@ -1,29 +1,65 @@
 <link rel="import" href="../../bower_components/google-map/google-map.html">
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-spinner/paper-spinner-lite.html">
 
 <dom-module id="my-map">
   <template>
     <style>
 
-       :host {
+       /* :host {
         display: block;
         width:100%;
         height:100%;
-      }
-      google-map {
+      } */
+
+      /* paper-progress {
+        display: none;
+        width: 89%;
+      } */
+
+      /* google-map {
         width:100%;
         height:100%;
+      } */
+
+      paper-button.green {
+        background-color: var(--paper-green-500);
+        color: white;
       }
     </style>
+    
+    <paper-dialog id="reserveBox">
+      <h2>[[markername]]</h2>
+      <template is="dom-repeat" items="{{content}}">
+        <p><u>Connector[[item.index]] </u>: Meter Value : [[item.metervalue]] Status : [[item.status]] 
+        <template is="dom-if" if="{{item.buttonstatus}}">
+          <paper-button dialog-confirm id=[[item.index]] class="green" on-click="sendReserve">จอง</paper-button></p>
+        </template>
+      </template>
+      <div class="buttons">
+        <paper-button dialog-confirm autofocus>ปิด</paper-button>
+      </div>
+      <!-- <paper-progress id="progress" indeterminate></paper-progress> -->
+    </paper-dialog>
+
+    <paper-dialog id="reserveprogress" style="width:50%;">
+        <h2><div id="textres">Waiting</div></h2>
+        <center><paper-spinner-lite id="progress" style="width:300px;height:300px;" active></paper-spinner-lite></center>
+        <p><div id="log"></div></p>
+        <div class="buttons">
+          <paper-button id="closebt" dialog-confirm on-click="clearValue">ปิด</paper-button>
+        </div>
+    </paper-dialog>
 
     <div class="card" style="width:100%; height:100%;">
-      <google-map fit-to-markers latitude="13.736" longitude="100.523" api-key="AIzaSyCYjysZzUoJZnWwvcztEqnXaYKsZniP0-E">
-        <template is="dom-repeat" items="{{position}}">
-          <google-map-marker latitude="[[item.lat]]" longitude="[[item.lng]]"></google-map-marker>
-        </template>
+      <google-map latitude="[[lat]]" longtitude="[[lng]]" on-google-map-ready='_mapReady'
+       api-key="AIzaSyCYjysZzUoJZnWwvcztEqnXaYKsZniP0-E">
       </google-map>
     </div>
+    
   </template>
 
   <script>
@@ -31,16 +67,101 @@
       static get is() { return 'my-map'; }
       static get properties() {
         return {
-          position:{
-            type:Array,
+          // lat:{
+          //   type:Number,
+          //   //value:13.736
+          // },
+          // lng:{
+          //   type:Number,
+          //   //value:100.523
+          // },
+          gmap:{
+            type:Object
+          },
+          // position:{
+          //   type:Array,
+          // } 
+          content:{
+            type:Object
+          },
+          markername:{
+            type:String
           }
         };
       }
 
       ready(){
         super.ready();
-        fb.allMarker(pos => { this.position = pos }); //query all marker from firebase
+        //this._getPosition();
+        //this.openReservebox();
+        //fb.allMarker(pos => { console.log(pos);this.position = pos }); //query all marker from firebase
+        
       }
+
+      // _getPosition(){
+      //   navigator.geolocation.getCurrentPosition((xposition) => {
+      //       this.lat = parseFloat(xposition.coords.latitude);
+      //       this.lng = parseFloat(xposition.coords.longitude);
+      //   });
+      // }
+
+      _mapReady(e) {
+        this.gmap = e.currentTarget.map;
+        navigator.geolocation.getCurrentPosition((xposition) => {
+            this.lat = parseFloat(xposition.coords.latitude);
+            this.lng = parseFloat(xposition.coords.longitude);
+            var c = { lat: parseFloat(xposition.coords.latitude), lng: parseFloat(xposition.coords.longitude) };
+            if(this.gmap) this.gmap.setCenter(c); //this._createMarker(c); };
+        });
+        this._createMarker();
+      }
+
+      _createMarker(c){
+        fb.allMarker( data => { 
+          data.forEach( (element,i) => {
+            var marker = new google.maps.Marker({
+              position: element.pos ,
+              map: this.gmap,
+            });
+            marker.addListener('click', () => {
+              this.markername = element.id;
+              var con = element.con;
+              con.forEach( (condata,i) => {
+                element.con[i].index = i;
+                if(condata.status == "Available" || condata.status == "available"){
+                  element.con[i].buttonstatus = true;
+                }else{
+                  element.con[i].buttonstatus = false;
+                };
+              });
+              this.content = element.con;
+              this.$.reserveBox.open();
+            });
+          });
+        });
+      }
+
+      sendReserve(e){
+        var connectorId = e.currentTarget.id;
+        this.$.reserveprogress.open();
+        this.$.progress.style = "display:block;";
+        this.$.closebt.disabled = true;
+        setTimeout(() => {
+          this.$.closebt.disabled = false;
+          this.$.progress.style = "display:none;";
+          this.$.textres.innerHTML = "Reserved";
+          this.$.log.innerHTML = "ChargerID : "+this.markername+" ConnectorID : "+connectorId;
+        }, 5000);
+        //console.log("ChargerId : ",this.markername,"ConnectorId : ",connectorId);
+      }
+
+      clearValue(){
+        
+        
+        this.$.log.innerHTML = "";
+        this.$.textres.innerHTML = "Waiting";
+      }
+
     }
 
     window.customElements.define(MyMap.is, MyMap);
