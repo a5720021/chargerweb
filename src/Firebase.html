@@ -35,14 +35,14 @@
                 callback(arr);
             });
         }
-        checkLogin(email,pass) {
+        checkLogin(email,pass,callback) {
             console.log(email,pass);
             // var arr = [];
             fb.db().ref('authorize').orderByChild('email').equalTo(email).on('value', function (snapshot) {
                 // console.log(snapshot.val());
                 snapshot.forEach(function (childSnapshot) {
                     if(childSnapshot.val().password == pass && childSnapshot.val().email == email){
-                        console.log(childSnapshot.key);
+                        callback({tag:childSnapshot.key,email:childSnapshot.val().email,amount:childSnapshot.val().amount});
                     }else{
                         console.log("Error");
                     }
