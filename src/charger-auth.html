@@ -1,0 +1,78 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/polymer/lib/utils/import-href.html">
+<link rel="import" href="../bower_components/polymer/lib/utils/render-status.html">
+
+<link rel="lazy-import" href="elements/my-login.html">
+<link rel="lazy-import" href="charger-app.html">
+
+<dom-module id="charger-auth">
+    <template>
+        <style>
+            :host {
+                display: block
+            }
+        </style>
+        <my-login></my-login>
+        <charger-app></charger-app>
+
+    </template>
+
+    <script>
+        /**
+         * `charger-auth` Description
+         *
+         * @summary ShortDescription.
+         * @customElement
+         * @polymer
+         * @extends {Polymer.Element}
+         */
+        class chargerAuth extends Polymer.Element {
+            /**
+             * String providing the tag name to register the element under.
+             */
+            static get is() {
+                return 'charger-auth';
+            }
+
+            /**
+             * Object describing property-related metadata used by Polymer features
+             */
+            static get properties() {
+                return {
+
+                };
+            }
+
+            /**
+             * Instance of the element is created/upgraded. Use: initializing state,
+             * set up event listeners, create shadow dom.
+             * @constructor
+             */
+            constructor() {
+                super();
+            }
+
+            /**
+             * Use for one-time configuration of your component after local DOM is initialized. 
+             */
+            ready() {
+                super.ready();
+                if (localStorage.getItem("email") != null || localStorage.getItem("email") != undefined) {
+                    const resolvedPageApp = this.resolveUrl('charger-app.html');
+                    Polymer.importHref(resolvedPageApp, null, null, true);
+                }
+                else{
+                    const resolvedPageLogin = this.resolveUrl('elements/my-login.html');
+                    Polymer.importHref(resolvedPageLogin, null, null, true);
+                }
+
+                Polymer.RenderStatus.afterNextRender(this, function () {
+
+                });
+            }
+
+        }
+
+        window.customElements.define(chargerAuth.is, chargerAuth);
+    </script>
+</dom-module>

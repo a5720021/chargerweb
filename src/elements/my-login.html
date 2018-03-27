@@ -1,8 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
-<!-- <link rel="import" href="../../bower_components/polymerfire/firebase-app.html">
-<link rel="import" href="../../bower_components/login-fire/login-fire-form.html"> -->
-<!-- <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700" rel="stylesheet"> -->
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
+
 
 <dom-module id="my-login">
     <template>
@@ -17,13 +16,8 @@
                 font-size: 16px;
             }
 
-            /* input,
-            button {
-                font-family: 'Nunito', sans-serif;
-                font-weight: 700;
-            } */
-
-            .main-div, .logout-div {
+            .main-div,
+            .logout-div {
                 background-color: #fff;
                 border-radius: 5px;
                 width: 25%;
@@ -32,76 +26,27 @@
                 padding: 50px;
             }
 
-/*             
-            .main-div paper-input {
-                display: block;
-                border: 1px solid #ccc;
-                border-radius: 5px;
-                background: #fff;
-                padding: 15px;
-                outline: none;
-                width: 100%;
-                margin-bottom: 20px;
-                transition: 0.3s;
-                -webkit-transition: 0.3s;
-                -moz-transition: 0.3s;
-            }
-
-            .main-div paper-input:focus {
-                border: 1px solid #777;
-            }
-
-            .main-div button,
-            .logout-div button {
-                background: #5d8ffc;
-                color: #fff;
-                border: 0px;
-                border-radius: 5px;
-                padding: 15px;
-                display: block;
-                width: 100%;
-                transition: 0.3s;
-                -webkit-transition: 0.3s;
-                -moz-transition: 0.3s;
-            }
-
-            .main-div button:hover,
-            .logout-div button:hover {
-                background: #fff;
-                color: #5d8ffc;
-                border: 1px solid #5d8ffc;
-                cursor: pointer;
-            } */
             paper-button.blue {
                 background-color: var(--paper-blue-500);
                 color: white;
             }
         </style>
-        <!-- <div class="main-div">
-            <firebase-app name="email" api-key="AIzaSyDpBtpDYu0a4roRChP0yWBgAu9yPB3lrjc" auth-domain="ocpp-database.firebaseapp.com"
-                database-url="https://ocpp-database.firebaseio.com">
-            </firebase-app>
-
-            <login-fire-form app-name="email">
-            </login-fire-form>
-        </div> -->
+        <charger-app></charger-app>
         <div class="main-div" id="login">
             <h3>Please Log-in</h3>
             <paper-input value={{userEmail}} always-float-label label="Email..."></paper-input>
             <paper-input type="password" value={{passWord}} always-float-label label="Password..."></paper-input>
-            <!-- <input type="email" placeholder="Email..."  value={{userEmail}}>
-            <input type="password" placeholder="Password..."  value={{passWord}}> -->
 
             <paper-button class="blue" on-click="login">Login</paper-button>
         </div>
 
-        <div class="logout-div" id="logout" style="display:none;">
+        <!-- <div class="logout-div" id="logout" style="display:none;">
             <h3>User Profile</h3>
             <p>Email : <div id="userid"></div></p>
             <p>Amount : <div id="useramount"></div></p>
             <p>TagId : <div id="usertag"></div></p>
             <paper-button class="blue" on-click="logout">Logout</button>
-        </div>
+        </div> -->
     </template>
 
     <script>
@@ -120,42 +65,33 @@
 
             ready() {
                 super.ready();
-                this._checkuser();
             }
 
-            _checkuser(){
-                //console.log(localStorage.getItem("email"));
-                if(localStorage.getItem("email") != null || localStorage.getItem("email") != undefined ){
-                    this.$.login.style = "display:none";
-                    this.$.logout.style = "display:block";
-                }
-            }
-
-            login(){
-                if(this.userEmail != undefined && this.passWord != undefined){
-                    fb.checkLogin(this.userEmail,this.passWord, val => {
+            login() {
+                if (this.userEmail != undefined && this.passWord != undefined) {
+                    fb.checkLogin(this.userEmail, this.passWord, val => {
                         localStorage.setItem("tag", val.tag);
                         localStorage.setItem("email", val.email);
                         localStorage.setItem("amount", val.amount);
-                        this.$.userid.innerHTML = localStorage.getItem("email");
-                        this.$.usertag.innerHTML = localStorage.getItem("tag");
-                        this.$.useramount.innerHTML = localStorage.getItem("amount");
-                        this.$.login.style = "display:none;";
-                        this.$.logout.style = "display:block;";
+                        // this.$.userid.innerHTML = localStorage.getItem("email");
+                        // this.$.usertag.innerHTML = localStorage.getItem("tag");
+                        // this.$.useramount.innerHTML = localStorage.getItem("amount");
+                        // this.$.login.style = "display:none;";
+                        // this.$.logout.style = "display:block;";
+                        // this.test();
+                        location.href = ""
+                        
                     });
                 }
-                // console.log(this.userEmail);
-                // console.log(this.passWord);
-                
             }
 
-            logout(){
-                localStorage.removeItem("tag");
-                localStorage.removeItem("amount");
-                localStorage.removeItem("email");
-                this.$.login.style = "display:block";
-                this.$.logout.style = "display:none";
-            }
+            // logout(){
+            //     localStorage.removeItem("tag");
+            //     localStorage.removeItem("amount");
+            //     localStorage.removeItem("email");
+            //     this.$.login.style = "display:block";
+            //     this.$.logout.style = "display:none";
+            // }
         }
         window.customElements.define(MyLogin.is, MyLogin);
     </script>
