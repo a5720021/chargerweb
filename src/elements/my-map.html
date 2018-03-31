@@ -34,7 +34,7 @@
     <paper-dialog id="reserveBox" modal>
       <h2>[[markername]]</h2>
       <template is="dom-repeat" items="{{content}}">
-        <p><u>Connector[[item.index]]</u> : Meter Value : [[item.metervalue]] Status : [[item.status]] 
+        <p><u>Connector[[item.index]]</u> : Meter Value : [[item.metervalue]] Status : [[item.status]]
         <template is="dom-if" if="{{item.buttonstatus}}">
           <paper-button dialog-confirm id=[[item.index]] class="green" on-click="sendReserve">จอง</paper-button></p>
         </template>
@@ -43,6 +43,15 @@
         <paper-button dialog-confirm autofocus>ปิด</paper-button>
       </div>
       <!-- <paper-progress id="progress" indeterminate></paper-progress> -->
+    </paper-dialog>
+
+    <paper-dialog id="reserveprogress" style="width:50%;" modal>
+      <h2><div id="textres">Waiting</div></h2>
+      <center><paper-spinner-lite id="progress" active></paper-spinner-lite></center>
+      <p><div id="log"></div></p>
+      <div class="buttons">
+        <paper-button id="closebt" dialog-confirm on-click="clearinnerValue">ปิด</paper-button>
+      </div>
     </paper-dialog>
 
     <div class="card" style="width:100%; height:calc(100% - 64px); position: fixed;">
@@ -83,18 +92,8 @@
 
       ready(){
         super.ready();
-        //this._getPosition();
-        //this.openReservebox();
-        //fb.allMarker(pos => { console.log(pos);this.position = pos }); //query all marker from firebase
-        
       }
 
-      // _getPosition(){
-      //   navigator.geolocation.getCurrentPosition((xposition) => {
-      //       this.lat = parseFloat(xposition.coords.latitude);
-      //       this.lng = parseFloat(xposition.coords.longitude);
-      //   });
-      // }
 
       _mapReady(e) {
         this.gmap = e.currentTarget.map;
@@ -102,12 +101,12 @@
             this.lat = parseFloat(xposition.coords.latitude);
             this.lng = parseFloat(xposition.coords.longitude);
             var c = { lat: parseFloat(xposition.coords.latitude), lng: parseFloat(xposition.coords.longitude) };
-            if(this.gmap) this.gmap.setCenter(c); //this._createMarker(c); };
+            if(this.gmap) this.gmap.setCenter(c); 
         });
         this._createMarker();
       }
 
-      _createMarker(c){
+      _createMarker(){
         fb.allMarker( data => { 
           data.forEach( (element,i) => {
             var marker = new google.maps.Marker({
@@ -116,6 +115,7 @@
             });
             marker.addListener('click', () => {
               this.markername = element.id;
+              this.content = element.con;
               var con = element.con;
               con.forEach( (condata,i) => {
                 element.con[i].index = i;
@@ -126,25 +126,31 @@
                 };
               });
               this.content = element.con;
+              //console.log(element);
               this.$.reserveBox.open();
             });
           });
         });
       }
 
-      sendReserve(e){
-        this.dispatchEvent(
-          new CustomEvent('sendReserve', {
-            bubbles: true, composed: true,
-            detail: {
-              conid : e.currentTarget.id,
-              cpid : this.markername
-            }
-          })
-        );
-        //var connectorId = e.currentTarget.id;
-        
-        //console.log("ChargerId : ",this.markername,"ConnectorId : ",connectorId);
+      sendReserve(e) {
+        console.log(e.path[0].id);
+        this.$.reserveprogress.open();
+        this.$.progress.style = "display:block;";
+        this.$.closebt.disabled = true;
+        setTimeout(() => {
+          this.$.closebt.disabled = false;
+          this.$.progress.style = "display:none;";
+          this.$.textres.innerHTML = "Reserved";
+          this.$.log.innerHTML = "ChargerID : " + this.markername +
+                                 " ConnectorID : " + e.path[0].id +
+                                 " idTag : "+ localStorage.getItem("tag");
+        }, 5000);
+      }
+
+      clearinnerValue() {
+        this.$.log.innerHTML = "";
+        this.$.textres.innerHTML = "Waiting";
       }
 
     }
