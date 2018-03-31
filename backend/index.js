@@ -35,15 +35,15 @@ app.use(bodyParser.json());
 
 app.use(cors());
 
-app.post('/auth', function (req, res) {
+app.post('/verifyOmise', function (req, res) {
     console.log(req.session);
 });
 
-app.get('/destroy', function (req, res) {
-    req.session.destroy(function(err) {
-        //sess = undefined;
-    })
-});
+// app.get('/destroy', function (req, res) {
+//     req.session.destroy(function(err) {
+//         //sess = undefined;
+//     })
+// });
 
 server.listen(3000, function () {
     console.log('Example app listening on port 3000!')
