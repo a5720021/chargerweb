@@ -127,10 +127,21 @@
     <app-route route="{{route}}" pattern="[[rootPath]]:page" data="{{routeData}}" tail="{{subroute}}">
     </app-route>
 
-    <app-drawer-layout fullbleed narrow="{{narrow}}">
+    <!-- <app-drawer-layout fullbleed narrow="{{narrow}}"> -->
+
+      <app-header slot="header" reveals>
+        <app-toolbar>
+          <paper-icon-button icon="menu" drawer-toggle on-click="openNav"></paper-icon-button>
+          <div main-title>EV Charger Station</div>
+          <!-- <paper-button style="margin-right:-5px;" on-click="openDialog">
+            <iron-icon style="margin-right: 2px;" icon="account-circle"></iron-icon>
+            login
+          </paper-button> -->
+        </app-toolbar>
+      </app-header>
 
       <!-- Drawer content -->
-      <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
+      <app-drawer id="drawer" slot="drawer" style="z-index:100;">
         <app-toolbar>
           <b>Menu</b>
         </app-toolbar>
@@ -140,34 +151,23 @@
           <a name="view3" href="[[rootPath]]account">Account / Billing</a>
           <a name="view4" href="[[rootPath]]request">Request Station</a>
           <a name="view5" href="[[rootPath]]map">Find Station / Reserve</a>
-          <a on-click="_logout">logout</a>
+          <a href="#" on-click="_logout">Logout</a>
         </iron-selector>
       </app-drawer>
 
       <!-- Main content -->
-      <app-header-layout has-scrolling-region>
+      <!-- <app-header-layout has-scrolling-region> -->
 
-        <app-header slot="header" condenses reveals>
-          <app-toolbar>
-            <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
-            <div main-title>EV Charger Station</div>
-            <!-- <paper-button style="margin-right:-5px;" on-click="openDialog">
-              <iron-icon style="margin-right: 2px;" icon="account-circle"></iron-icon>
-              login
-            </paper-button> -->
-          </app-toolbar>
-        </app-header>
-
-        <iron-pages selected="[[page]]" attr-for-selected="name" style="width:100%; height:100%;" fallback-selection="login" role="main">
+        <iron-pages selected="[[page]]" attr-for-selected="name" style="width:100%; height:100%; z-index:5;" fallback-selection="login" role="main">
           <my-about name="about" ng-disabled="ture"></my-about>
           <my-news name="news"></my-news>
           <my-request name="request"></my-request>
           <my-account name="account"></my-account>
-          <my-map name="map" style="width:100%; height:100%"></my-map>
+          <my-map name="map"></my-map>
           <my-view404 name="view404"></my-view404>
         </iron-pages>
-      </app-header-layout>
-    </app-drawer-layout>
+      <!-- </app-header-layout> -->
+    <!-- </app-drawer-layout> -->
 
     <!-- <paper-dialog id="dialog" modal>
         <h2>Authentication</h2>
@@ -273,6 +273,10 @@
         location.href = "";
       }
 
+      openNav(){
+        this.$.drawer.open();
+      }
+
       // logout(){
       //   axios.get('http://localhost:3000/destroy').then((response) => {
       //       console.log(response);
@@ -325,7 +329,9 @@
           this.$.closebt.disabled = false;
           this.$.progress.style = "display:none;";
           this.$.textres.innerHTML = "Reserved";
-          this.$.log.innerHTML = "ChargerID : " + e.detail.cpid + " ConnectorID : " + e.detail.conid;
+          this.$.log.innerHTML = "ChargerID : " + e.detail.cpid +
+                                 " ConnectorID : " + e.detail.conid +
+                                 " idTag : "+ localStorage.getItem("tag");
         }, 5000);
       }
 

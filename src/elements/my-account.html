@@ -1,5 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../shared-styles.html">
+<script src="https://cdn.omise.co/omise.js.gz"></script>
 
 <dom-module id="my-account">
   <template>
@@ -9,6 +10,11 @@
 
         padding: 10px;
       }
+      paper-button.blue {
+          background-color: var(--paper-blue-500);
+          color: white;
+      }
+
     </style>
 
     <div class="card">
@@ -17,18 +23,68 @@
       <p>Modus commodo minimum eum te, vero utinam assueverit per eu.</p>
       <p>Ea duis bonorum nec, falli paulo aliquid ei eum.Has at minim mucius aliquam, est id tempor laoreet.Pro saepe pertinax ei, ad pri animal labores suscipiantur.</p>
     </div>
+
     <!-- Main Billing -->
     <div class="card">
-        <div class="circle">4</div> 
-        <h1>Billing</h1>
-        <p>Modus commodo minimum eum te, vero utinam assueverit per eu.</p>
-        <p>Ea duis bonorum nec, falli paulo aliquid ei eum.Has at minim mucius aliquam, est id tempor laoreet.Pro saepe pertinax ei, ad pri animal labores suscipiantur.</p>
+      <div class="circle">B</div> 
+      <h1>Billing</h1>
+      <p>จำนวนเงินคงเหลือ : [[amount]]</p>
+      <paper-button class="blue" on-click="openPaymentbox">เติมเงิน</paper-button>
+    </div>
+
+    <paper-dialog id="paymentBox" modal style="z-index:105;">
+      <h2>Please fill your Credit card ID</h2>
+      <paper-input value={{name}} always-float-label label="Name"></paper-input>
+      <paper-input value={{cardid}} always-float-label label="Card ID"></paper-input>
+      <paper-input value={{expy}} always-float-label label="EXP year"></paper-input>
+      <paper-input value={{expm}} always-float-label label="EXP month"></paper-input>
+      <paper-input value={{secureid}} always-float-label label="CVV"></paper-input>
+
+      <div class="buttons">
+        <paper-button class="blue" dialog-confirm on-click="Topup">ยืนยัน</paper-button>
+        <paper-button dialog-confirm autofocus>ปิด</paper-button>
       </div>
+    </paper-dialog>
+
   </template>
 
   <script>
     class MyAccount extends Polymer.Element {
       static get is() { return 'my-account'; }
+
+      static get properties() {
+          return {
+              amount: {
+                  type: Number
+              }
+          };
+      }
+
+      ready(){
+        super.ready();
+        this.amount = localStorage.getItem("amount");
+      }
+
+      openPaymentbox(){
+        this.$.paymentBox.open();
+      }
+
+      omiseCheck(){
+        Omise.setPublicKey("pkey_test_5aovaci45z8vf0sbcj9");
+        // Given that you have a form element with an id of "card" in your page.
+        var card_form = this.$.card;
+
+        // Serialize the card into a valid card object.
+        var card = {
+          "name": card_form.holder_name.value,
+          "number": card_form.number.value,
+          "expiration_month": card_form.expiration_month.value,
+          "expiration_year": card_form.expiration_year.value,
+          "security_code": card_form.security_code.value
+        };
+      }
+
+
     }
 
     window.customElements.define(MyAccount.is, MyAccount);

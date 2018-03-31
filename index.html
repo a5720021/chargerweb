@@ -8,7 +8,7 @@
 
   <title>My App</title>
   <meta name="description" content="My App description">
-  <!-- <script src="http://localhost:3000/socket.io/socket.io.js"></script> -->
+  <script src="http://localhost:3000/socket.io/socket.io.js"></script>
   <!-- <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700" rel="stylesheet">
   <link rel="stylesheet" href="style.css"> -->
   <link rel="import" href="./src/Firebase.html">
@@ -37,11 +37,11 @@
       });
     }
 
-    // var socket = io.connect('http://localhost:3000');
-      // socket.on('update', function (data) {
-      //   console.log(data);
-      //   // socket.emit('my other event', { my: 'data' });
-      // });
+    var socket = io.connect('http://localhost:3000');
+      socket.on('update', function (data) {
+        console.log(data);
+        // socket.emit('my other event', { my: 'data' });
+      });
 
   </script>
 

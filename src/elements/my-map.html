@@ -31,7 +31,7 @@
       }
     </style>
     
-    <paper-dialog id="reserveBox">
+    <paper-dialog id="reserveBox" modal>
       <h2>[[markername]]</h2>
       <template is="dom-repeat" items="{{content}}">
         <p><u>Connector[[item.index]]</u> : Meter Value : [[item.metervalue]] Status : [[item.status]] 
@@ -45,7 +45,7 @@
       <!-- <paper-progress id="progress" indeterminate></paper-progress> -->
     </paper-dialog>
 
-    <div class="card" style="width:100%; height:100%;">
+    <div class="card" style="width:100%; height:calc(100% - 64px); position: fixed;">
       <google-map latitude="[[lat]]" longtitude="[[lng]]" on-google-map-ready='_mapReady'
        api-key="AIzaSyCYjysZzUoJZnWwvcztEqnXaYKsZniP0-E">
       </google-map>
