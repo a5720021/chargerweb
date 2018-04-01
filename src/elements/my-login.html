@@ -75,7 +75,7 @@
                         localStorage.setItem("amount", val.amount);
                         location.href = ""
                         
-                    });
+                    }, err => {console.log(err)});
                 }
             }
         }

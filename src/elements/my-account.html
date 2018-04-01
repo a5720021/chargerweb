@@ -1,5 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-spinner/paper-spinner-lite.html">
 <link rel="import" href="../shared-styles.html">
+<script src="https://cdn.omise.co/omise.js.gz"></script>
 
 <dom-module id="my-account">
   <template>
@@ -9,7 +11,35 @@
 
         padding: 10px;
       }
+      paper-button.blue {
+          background-color: var(--paper-blue-500);
+          color: white;
+      }
+
     </style>
+
+    <paper-dialog id="verifyBox" style="z-index:105;" modal>
+      <h2>Please Verify your card</h2>
+      <paper-input value={{cname}} always-float-label label="Name"></paper-input>
+      <paper-input value={{cardid}} always-float-label label="Card ID"></paper-input>
+      <paper-input value={{expy}} always-float-label label="EXP year"></paper-input>
+      <paper-input value={{expm}} always-float-label label="EXP month"></paper-input>
+      <paper-input value={{secureid}} always-float-label type="password" label="CVV"></paper-input>
+      <paper-input value={{thbamount}} always-float-label label="Amount (THB)"></paper-input>
+      <div class="buttons">
+        <paper-button class="blue" dialog-confirm on-click="verifyCard">ยืนยัน</paper-button>
+        <paper-button dialog-confirm autofocus>ปิด</paper-button>
+      </div>
+    </paper-dialog>
+
+    <paper-dialog id="paymentBox" style="width:50%;" modal>
+      <div id="textres"><h2>Waiting</h2></div>
+      <center><paper-spinner-lite id="progress" active></paper-spinner-lite></center>
+
+      <div class="buttons">
+        <paper-button id="closebt" dialog-confirm on-click="resetPaymentBox">ปิด</paper-button>
+      </div>
+    </paper-dialog>
 
     <div class="card">
       <div class="circle">3</div>
@@ -17,18 +47,98 @@
       <p>Modus commodo minimum eum te, vero utinam assueverit per eu.</p>
       <p>Ea duis bonorum nec, falli paulo aliquid ei eum.Has at minim mucius aliquam, est id tempor laoreet.Pro saepe pertinax ei, ad pri animal labores suscipiantur.</p>
     </div>
+
     <!-- Main Billing -->
     <div class="card">
-        <div class="circle">4</div> 
-        <h1>Billing</h1>
-        <p>Modus commodo minimum eum te, vero utinam assueverit per eu.</p>
-        <p>Ea duis bonorum nec, falli paulo aliquid ei eum.Has at minim mucius aliquam, est id tempor laoreet.Pro saepe pertinax ei, ad pri animal labores suscipiantur.</p>
-      </div>
+      <div class="circle">B</div> 
+      <h1>Billing</h1>
+      <p>จำนวนเงินคงเหลือ : [[myamount]]</p>
+      <paper-button class="blue" on-click="openPaymentbox">เติมเงิน</paper-button>
+    </div>
+
   </template>
 
   <script>
     class MyAccount extends Polymer.Element {
       static get is() { return 'my-account'; }
+
+      static get properties() {
+          return {
+              myamount: {
+                  type: Number
+              },
+              cname:String,
+              cardid:String,
+              expy:String,
+              expm:String,
+              secureid:String,
+              thbamount:Number,
+          };
+      }
+
+      ready(){
+        super.ready();
+        this.myamount = localStorage.getItem("amount");
+      }
+
+      openPaymentbox(){
+        this.$.verifyBox.open();
+      }
+
+      _setPaymentBox(){
+        this.$.progress.active = false;
+      }
+
+      resetPaymentBox(){
+        this.$.textres.innerHTML = "<h2>Waiting</h2>";
+        this.$.progress.active = true;
+        //location.href = "";
+      }
+
+      verifyCard(){
+        this.$.verifyBox.close();
+        this.$.paymentBox.open();
+        Omise.setPublicKey("pkey_test_5aovaci45z8vf0sbcj9");
+        // Given that you have a form element with an id of "card" in your page.
+        var card_form = this.$.card;
+
+        // Serialize the card into a valid card object.
+        var card = {
+          "name": this.cname,//card_form.holder_name.value,
+          "number": this.cardid,//card_form.number.value,
+          "expiration_month": this.expm,//card_form.expiration_month.value,
+          "expiration_year": this.expy,//card_form.expiration_year.value,
+          "security_code": this.secureid//card_form.security_code.value
+        };
+        //console.log(card);
+        Omise.createToken("card", card, (statusCode, response) => {
+          if (statusCode == 200) {
+            //console.log(response.id);
+            this.$.textres.innerHTML = "<h2>Verify Complete</h2>";
+            this.sendTokentoServer(response.id);
+
+            // Success: send back the TOKEN_ID to your server to create a charge.
+            // The TOKEN_ID can be found in `response.id`.
+          } else {
+            this.$.textres.innerHTML = "<h2>"+response.code+": "+response.message+"</h2>";
+            // Error: display an error message. Note that `response.message` contains
+            // a preformatted error message. Also note that `response.code` will be
+            // "invalid_card" in case of validation error on the card.
+
+            // Example Error displaying
+            //console.log(response.code+": "+response.message);
+          }
+          this._setPaymentBox();
+        });
+        
+      }
+
+      sendTokentoServer(token){
+        //pass
+        console.log(token);
+      }
+
+
     }
 
     window.customElements.define(MyAccount.is, MyAccount);
