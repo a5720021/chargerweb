@@ -73,25 +73,11 @@
                         localStorage.setItem("tag", val.tag);
                         localStorage.setItem("email", val.email);
                         localStorage.setItem("amount", val.amount);
-                        // this.$.userid.innerHTML = localStorage.getItem("email");
-                        // this.$.usertag.innerHTML = localStorage.getItem("tag");
-                        // this.$.useramount.innerHTML = localStorage.getItem("amount");
-                        // this.$.login.style = "display:none;";
-                        // this.$.logout.style = "display:block;";
-                        // this.test();
                         location.href = ""
                         
                     });
                 }
             }
-
-            // logout(){
-            //     localStorage.removeItem("tag");
-            //     localStorage.removeItem("amount");
-            //     localStorage.removeItem("email");
-            //     this.$.login.style = "display:block";
-            //     this.$.logout.style = "display:none";
-            // }
         }
         window.customElements.define(MyLogin.is, MyLogin);
     </script>
