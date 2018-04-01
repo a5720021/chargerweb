@@ -45,12 +45,7 @@
                     if(childSnapshot.val().password == pass && childSnapshot.val().email == email){
                         callback({tag:childSnapshot.key,email:childSnapshot.val().email,amount:childSnapshot.val().amount});
                     }else{
-<<<<<<< HEAD
-                        // console.log("Email or Password incorrect");
-                        alert("Email or Password incorrect");
-=======
                         error("Error");
->>>>>>> 8b8368131ad377de600b3b784696c0050d4d1031
                     }
                 });
             });
