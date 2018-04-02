@@ -26,31 +26,42 @@
 
         allMarker(callback) {
             var arr = [];
-            fb.db().ref('/chargerstation').on('value', function(snapshot) {
-                snapshot.forEach(function(childSnapshot) {
+            fb.db().ref('/chargerstation').on('value', function (snapshot) {
+                snapshot.forEach(function (childSnapshot) {
                     var cpid = childSnapshot.key;
                     var childData = childSnapshot.val();
-                    arr.push({id:cpid,pos:childData.position,con:childData.connector});
+                    arr.push({ id: cpid, pos: childData.position, con: childData.connector });
                 });
                 callback(arr);
             });
         }
-        checkLogin(email,pass,callback,error) {
-            console.log(email,pass);
+        checkLogin(email, pass, callback, error) {
+            console.log(email, pass);
             // var arr = [];
             fb.db().ref('authorize').orderByChild('email').equalTo(email).on('value', function (snapshot) {
                 //console.log(snapshot.val());
                 snapshot.forEach(function (childSnapshot) {
                     console.log(childSnapshot.val());
-                    if(childSnapshot.val().password == pass && childSnapshot.val().email == email){
-                        callback({tag:childSnapshot.key,email:childSnapshot.val().email,amount:childSnapshot.val().amount});
-                    }else{
+                    if (childSnapshot.val().password == pass && childSnapshot.val().email == email) {
+                        callback({email: childSnapshot.val().email});
+                    } else {
                         error("Error");
                     }
                 });
             });
         }
+        displayData(callback) {
+            var email_user = localStorage.getItem("email");
+            if (localStorage.getItem("email") != null || localStorage.getItem("email") != undefined) {
+                fb.db().ref('authorize').orderByChild('email').equalTo(email_user).on('value', function (snapshot) {
+                    snapshot.forEach(function (childSnapshot) {
+                        callback({ tag: childSnapshot.key, email: childSnapshot.val().email, amount: childSnapshot.val().amount });
+                    });
+                });
+            }
+        }
     }
+
 
     window.fb = new Firebase();
 

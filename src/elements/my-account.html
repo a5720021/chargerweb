@@ -51,8 +51,6 @@
       <p>Email : [[email_user]]</p>
       <p>Amount : [[myamount]]</p>
       <p>Id tag : [[id_tag_user]]</p>
-      <!-- <paper-button class="blue" on-click="displayAcc">Show Data Account</paper-button>
-      <p id="account"></p> -->
     </div>
 
     <!-- Main Billing -->
@@ -91,9 +89,7 @@
 
       ready() {
         super.ready();
-        this.myamount = localStorage.getItem("amount");
-        this.email_user = localStorage.getItem("email");
-        this.id_tag_user = localStorage.getItem("tag");
+        this.displayAcc();
       }
 
       openPaymentbox() {
@@ -153,18 +149,13 @@
         console.log(token);
       }
 
-      // displayAcc() {
-      //   document.getElementById("account").innerHTML ="Email : " + this.email_user +
-      //                                                     " Amount : " + this.myamount +
-      //                                                     " IdTag : "+ this.id_tag_user;
-      //   fb.db().ref('authorize').orderByChild('email').equalTo(email_user).on('value', function (snapshot) {
-      //     snapshot.forEach(function (childSnapshot) {
-      //       document.getElementById("account").innerHTML ="Email : " + email_user +
-      //                                                     " Amount : " + this.myamount +
-      //                                                     " IdTag : "+ id_tag;
-      //     });
-      //   });
-      // }
+      displayAcc() {
+        fb.displayData(data => {
+            this.email_user = data.email,
+            this.myamount = data.amount,
+            this.id_tag_user = data.tag
+        });
+      }
 
 
     }

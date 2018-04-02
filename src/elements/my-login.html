@@ -62,9 +62,7 @@
             login() {
                 if (this.userEmail != undefined && this.passWord != undefined) {
                     fb.checkLogin(this.userEmail, this.passWord, val => {
-                        localStorage.setItem("tag", val.tag);
                         localStorage.setItem("email", val.email);
-                        localStorage.setItem("amount", val.amount);
                         location.href = ""
                         
                     }, err => {console.log(err)});
