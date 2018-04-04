@@ -2,6 +2,7 @@
 <link rel="import" href="../../bower_components/paper-spinner/paper-spinner-lite.html">
 <link rel="import" href="../shared-styles.html">
 <script src="https://cdn.omise.co/omise.js.gz"></script>
+<script src="../../bower_components/axios/dist/axios.min.js"></script>
 
 <dom-module id="my-account">
   <template>
@@ -49,13 +50,7 @@
       <div class="circle">3</div>
       <h1>Account</h1>
       <p>Email : [[email_user]]</p>
-      <p>Amount : [[myamount]]</p>
-      <p>Id tag : [[id_tag_user]]</p>
-    </div>
-
-    <!-- Main Billing -->
-    <div class="card">
-      <div class="circle">B</div>
+      <p>Id tag : [[id_tag_user]]</p><hr/>
       <h1>Billing</h1>
       <p>จำนวนเงินคงเหลือ : [[myamount]]</p>
       <paper-button class="blue" on-click="openPaymentbox">เติมเงิน</paper-button>
@@ -97,18 +92,19 @@
       }
 
       _setPaymentBox() {
-        this.$.progress.active = false;
+        this.$.progress.style = "display:none";
       }
 
       resetPaymentBox() {
         this.$.textres.innerHTML = "<h2>Waiting</h2>";
-        this.$.progress.active = true;
+        this.$.progress.style = "display:block";
         //location.href = "";
       }
 
       verifyCard() {
         this.$.verifyBox.close();
         this.$.paymentBox.open();
+
         Omise.setPublicKey("pkey_test_5aovaci45z8vf0sbcj9");
         // Given that you have a form element with an id of "card" in your page.
         var card_form = this.$.card;
@@ -121,32 +117,36 @@
           "expiration_year": this.expy,//card_form.expiration_year.value,
           "security_code": this.secureid//card_form.security_code.value
         };
+
         //console.log(card);
         Omise.createToken("card", card, (statusCode, response) => {
           if (statusCode == 200) {
-            //console.log(response.id);
-            this.$.textres.innerHTML = "<h2>Verify Complete</h2>";
-            this.sendTokentoServer(response.id);
-
             // Success: send back the TOKEN_ID to your server to create a charge.
             // The TOKEN_ID can be found in `response.id`.
-          } else {
-            this.$.textres.innerHTML = "<h2>" + response.code + ": " + response.message + "</h2>";
+            this.$.textres.innerHTML = "<h2>Verify Card Complete</h2>";
+            this.sendBackend(response.id,this.thbamount);
+          } else {          
             // Error: display an error message. Note that `response.message` contains
             // a preformatted error message. Also note that `response.code` will be
             // "invalid_card" in case of validation error on the card.
-
-            // Example Error displaying
-            //console.log(response.code+": "+response.message);
+            this.$.textres.innerHTML = "<h2>" + response.code + "</h2><p>" + response.message + "</p>";
           }
-          this._setPaymentBox();
+          //this._setPaymentBox(); // Hide progress bar
         });
-
       }
 
-      sendTokentoServer(token) {
-        //pass
-        console.log(token);
+      sendBackend(token,amount) {
+        //post to backend
+        axios.post('http://localhost:3000/transaction', {
+          token : token,
+          amount : amount 
+        }).then((response) => {
+          if(response.data.complete){
+            this.$.textres.innerHTML = "<h2>Complete</h2><p>Your balanced has been updated</p>";
+            this._setPaymentBox();
+            //console.log("Complete");
+          };
+        }).catch(function (error) {console.log(error); });
       }
 
       displayAcc() {

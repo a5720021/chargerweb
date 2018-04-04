@@ -6,6 +6,10 @@ var io = require('socket.io')(server);
 var bodyParser = require('body-parser')
 //r = require('rethinkdb')
 var firebase = require("firebase");
+var omise = require('omise')({
+    'secretKey': 'skey_test_5aovaci4ff1eoa7lb4d',
+    'omiseVersion': '2015-09-10'
+  });
 
 var config = {
     apiKey: "AIzaSyDpBtpDYu0a4roRChP0yWBgAu9yPB3lrjc",
@@ -35,8 +39,23 @@ app.use(bodyParser.json());
 
 app.use(cors());
 
-app.post('/verifyOmise', function (req, res) {
-    console.log(req.session);
+app.post('/transaction', function (req, res) {
+    //console.log(res);
+    omise.charges.create({
+        'description': 'Charge for order ID: 888',
+        'amount': req.body.amount *100, // 1,000 Baht
+        'currency': 'thb',
+        'capture': true,
+        'card': req.body.token
+      }, (err, resp) => {
+        if (resp) { //Success    
+          console.log(resp);
+          res.json({complete:true});
+        } else {  //Handle failure
+          console.log(resp.failure_code);
+          //console.log("Error : "+resp);
+        }
+      });
 });
 
 // app.get('/destroy', function (req, res) {
