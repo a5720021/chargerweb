@@ -124,27 +124,28 @@
             // Success: send back the TOKEN_ID to your server to create a charge.
             // The TOKEN_ID can be found in `response.id`.
             this.$.textres.innerHTML = "<h2>Verify Card Complete</h2>";
-            this.sendBackend(response.id,this.thbamount);
+            this.sendBackend(response.id,this.thbamount,this.email_user);
           } else {          
             // Error: display an error message. Note that `response.message` contains
             // a preformatted error message. Also note that `response.code` will be
             // "invalid_card" in case of validation error on the card.
             this.$.textres.innerHTML = "<h2>" + response.code + "</h2><p>" + response.message + "</p>";
+            this._setPaymentBox();
           }
           //this._setPaymentBox(); // Hide progress bar
         });
       }
 
-      sendBackend(token,amount) {
+      sendBackend(token,amount,userEmail) {
         //post to backend
         axios.post('http://localhost:3000/transaction', {
           token : token,
-          amount : amount 
+          amount : amount ,
+          user : userEmail
         }).then((response) => {
           if(response.data.complete){
             this.$.textres.innerHTML = "<h2>Complete</h2><p>Your balanced has been updated</p>";
             this._setPaymentBox();
-            //console.log("Complete");
           };
         }).catch(function (error) {console.log(error); });
       }

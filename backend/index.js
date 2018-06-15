@@ -41,28 +41,29 @@ app.use(cors());
 
 app.post('/transaction', function (req, res) {
     //console.log(res);
+    var topupamount = req.body.amount;
     omise.charges.create({
         'description': 'Charge for order ID: 888',
-        'amount': req.body.amount *100, // 1,000 Baht
+        'amount':  topupamount*100, // 1,000 Baht
         'currency': 'thb',
         'capture': true,
         'card': req.body.token
       }, (err, resp) => {
         if (resp) { //Success    
-          console.log(resp);
-          res.json({complete:true});
+            database.ref('authorize').orderByChild('email').equalTo(req.body.user).on('child_added', (snapshot) => {
+                var amount = parseInt(snapshot.val().amount) + parseInt(topupamount);
+                //update amount at user's id
+                var thisRef = database.ref('authorize/'+snapshot.key);
+                thisRef.update({
+                    "amount" : amount
+                });
+            });
+            res.json({complete:true}); //Send Charge complete status to frontend
         } else {  //Handle failure
           console.log(resp.failure_code);
-          //console.log("Error : "+resp);
         }
       });
 });
-
-// app.get('/destroy', function (req, res) {
-//     req.session.destroy(function(err) {
-//         //sess = undefined;
-//     })
-// });
 
 server.listen(3000, function () {
     console.log('Example app listening on port 3000!')
