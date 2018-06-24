@@ -1,0 +1,56 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/google-map/google-map.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../shared-styles.html">
+
+<dom-module id="my-reserve">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+
+      google-map {
+        height: 250px;
+      }
+
+      paper-button.red {
+        width:33.33%;
+        background-color: var(--paper-red-500);
+        color: white;
+      }
+
+       paper-button.red:hover {
+            background-color: var(--paper-red-400) !important;
+        }
+    </style>
+
+    <div class="card">
+        <google-map id="reserve" api-key="AIzaSyCYjysZzUoJZnWwvcztEqnXaYKsZniP0-E"></google-map>
+        <div>
+            <h1>EV News 1</h1>
+            <p>Status : </p>
+            <p>Expiry Date : </p>
+            <p align="center">
+                <paper-button dialog-confirm class="red" align="right" on-click="sendReserve">ยกเลิก</paper-button>
+            </p>
+        </div>
+    </div>
+
+    <div class="card">
+        <h1>EV News 1</h1>
+        <p>Id nam odio natum malorum, tibique copiosae expetenda mel ea.Detracto suavitate repudiandae no eum. Id adhuc minim soluta nam.Id nam odio natum malorum, tibique copiosae expetenda mel ea.</p>
+    </div>
+
+  </template>
+
+  <script>
+    class MyReserve extends Polymer.Element {
+      static get is() { return 'my-reserve'; }
+    }
+
+    window.customElements.define(MyReserve.is, MyReserve);
+  </script>
+</dom-module>

@@ -16,14 +16,17 @@
             firebase.initializeApp(config);
         }
 
-        test() {
-            console.log("test");
+        calculateExp(minutes) {
+            var now = new Date();
+            var exp = new Date(now.getTime() + minutes * 60000);
+            return exp.toString();
         }
 
         db() {
             return firebase.database();
         }
-
+        
+        //Draw all marker by querying 
         allMarker(callback) {
             var arr = [];
             fb.db().ref('/chargerstation').on('value', function (snapshot) {
@@ -35,6 +38,8 @@
                 callback(arr);
             });
         }
+
+        //Check user and pass before login 
         checkLogin(email, pass, callback, error) {
             console.log(email, pass);
             // var arr = [];
@@ -43,13 +48,15 @@
                 snapshot.forEach(function (childSnapshot) {
                     console.log(childSnapshot.val());
                     if (childSnapshot.val().password == pass && childSnapshot.val().email == email) {
-                        callback({email: childSnapshot.val().email});
+                        callback({email: childSnapshot.val().email , idTag : childSnapshot.key});
                     } else {
                         error("Error");
                     }
                 });
             });
         }
+
+        //Show Value used in myaccount
         displayData(callback) {
             var email_user = localStorage.getItem("email");
             if (localStorage.getItem("email") != null || localStorage.getItem("email") != undefined) {
@@ -59,6 +66,27 @@
                     });
                 });
             }
+        }
+
+        //Add new reservation request
+        addReservation(cpid,connectorId,idTag){
+            var ref = fb.db().ref('/reservation').orderByKey().limitToLast(1);
+            
+            ref.once('value').then( (snapshot) => {
+                snapshot.forEach((childSnapshot) => {
+                    var reservationId = parseInt(childSnapshot.key)+1;
+                    //var newexp = new Date();
+                    //console.log(newexp);
+
+                    //insert new reserve after send ocpp message
+                    fb.db().ref('/reservation').child(String(reservationId)).set({
+                        cpid : cpid,
+                        connectorid : connectorId,
+                        idTag : idTag ,
+                        expirydate : this.calculateExp(60)
+                    });
+                });
+            },function (error) { console.log("Error: " + error.code);});
         }
     }
 

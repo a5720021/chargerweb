@@ -20,6 +20,7 @@
 <link rel="lazy-import" href="elements/my-map.html">
 <link rel="lazy-import" href="elements/my-new.html">
 <link rel="lazy-import" href="elements/my-request.html">
+<link rel="lazy-import" href="elements/my-reserve.html">
 <link rel="lazy-import" href="elements/my-view404.html">
 
 <custom-style>
@@ -151,6 +152,7 @@
           <a name="view3" href="[[rootPath]]account">Account / Billing</a>
           <a name="view4" href="[[rootPath]]request">Request Station</a>
           <a name="view5" href="[[rootPath]]map">Find Station / Reserve</a>
+          <a name="view6" href="[[rootPath]]reserve">Check Reservation Status</a>
           <a href="#" on-click="_logout">Logout</a>
         </iron-selector>
       </app-drawer>
@@ -164,6 +166,7 @@
           <my-request name="request"></my-request>
           <my-account name="account"></my-account>
           <my-map name="map"></my-map>
+          <my-reserve name="reserve"></my-reserve>
           <my-view404 name="view404"></my-view404>
         </iron-pages>
       <!-- </app-header-layout> -->
@@ -209,6 +212,10 @@
 
       ready() {
         super.ready();
+        this.addEventListener('topagereserve', e => {
+          //this._routePageChanged("reserve");
+          this.set('route.path', '/reserve');
+        });
       }
 
       _routePageChanged(page) {
