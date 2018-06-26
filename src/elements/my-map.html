@@ -33,7 +33,7 @@
       <template is="dom-repeat" items="{{content}}">
         <p><u>Connector [[item.index]]</u> : Meter Value : [[item.metervalue]] Status : [[item.status]]
           <template is="dom-if" if="{{item.buttonstatus}}">
-            <paper-button dialog-confirm id="[[item.index]]" class="green" on-click="sendReserve">จอง</paper-button>
+            <paper-button dialog-confirm id="[[markername]]-[[item.index]]" class="green" on-click="sendReserve">จอง</paper-button>
           </template>
         </p>
       </template>
@@ -74,7 +74,10 @@
           },
           markername:{
             type:String
-          }
+          },
+          // connectorId:{
+          //   type:String
+          // }
         };
       }
 
@@ -112,6 +115,7 @@
               var con = element.con;
               con.forEach( (condata,i) => {
                 element.con[i].index = i;
+                //this.connectorId = element.con[i].index;
                 if(condata.status == "Available" || condata.status == "available"){
                   element.con[i].buttonstatus = true;
                 }else{
@@ -129,8 +133,8 @@
         this.reserving();
         setTimeout(() => {
           this.finishReserved();
-          fb.addReservation(this.markername, e.path[0].id,localStorage.getItem("idTag"));
-        }, 5000);
+          fb.addReservation(this.markername, e.model.item.index,localStorage.getItem("idTag"));
+        }, 3000);
       }
 
       reserving(){

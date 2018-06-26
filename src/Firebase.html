@@ -19,7 +19,7 @@
         calculateExp(minutes) {
             var now = new Date();
             var exp = new Date(now.getTime() + minutes * 60000);
-            return exp.toString();
+            return exp.toLocaleString();
         }
 
         db() {
@@ -75,16 +75,28 @@
             ref.once('value').then( (snapshot) => {
                 snapshot.forEach((childSnapshot) => {
                     var reservationId = parseInt(childSnapshot.key)+1;
-                    //var newexp = new Date();
-                    //console.log(newexp);
 
                     //insert new reserve after send ocpp message
                     fb.db().ref('/reservation').child(String(reservationId)).set({
                         cpid : cpid,
-                        connectorid : connectorId,
+                        connectorId : connectorId,
                         idTag : idTag ,
-                        expirydate : this.calculateExp(60)
+                        expiryDate : this.calculateExp(60),
+                        status : "Pending"
                     });
+                });
+            },function (error) { console.log("Error: " + error.code);});
+        }
+        
+        //Show All Reservation on myReserve
+        showReservationStatus(idTag){
+            var ref = fb.db().ref('/reservation').orderByChild('idTag').equalTo(idTag);
+            
+            ref.once('value').then( (snapshot) => {
+                snapshot.forEach((childSnapshot) => {
+                    var reservationId = parseInt(childSnapshot.key)+1;
+                    var childval = childSnapshot.val();
+                    console.log(childval);
                 });
             },function (error) { console.log("Error: " + error.code);});
         }

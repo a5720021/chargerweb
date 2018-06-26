@@ -28,7 +28,7 @@
     </style>
 
     <div class="card">
-        <google-map id="reserve" api-key="AIzaSyCYjysZzUoJZnWwvcztEqnXaYKsZniP0-E"></google-map>
+        <!-- <google-map id="reserve" api-key="AIzaSyCYjysZzUoJZnWwvcztEqnXaYKsZniP0-E"></google-map> -->
         <div>
             <h1>EV News 1</h1>
             <p>Status : </p>
@@ -39,16 +39,24 @@
         </div>
     </div>
 
-    <div class="card">
-        <h1>EV News 1</h1>
-        <p>Id nam odio natum malorum, tibique copiosae expetenda mel ea.Detracto suavitate repudiandae no eum. Id adhuc minim soluta nam.Id nam odio natum malorum, tibique copiosae expetenda mel ea.</p>
-    </div>
-
   </template>
 
   <script>
     class MyReserve extends Polymer.Element {
       static get is() { return 'my-reserve'; }
+      static get properties() {
+        return {
+          allReserve:{
+            type:Object
+          }
+        };
+      }
+
+      ready(){
+        super.ready();
+        fb.showReservationStatus(localStorage.getItem("idTag"));
+      }
+
     }
 
     window.customElements.define(MyReserve.is, MyReserve);
