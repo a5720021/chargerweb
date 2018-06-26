@@ -1,6 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/google-map/google-map.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/polymer/lib/elements/dom-repeat.html">
 <link rel="import" href="../shared-styles.html">
 
 <dom-module id="my-reserve">
@@ -26,18 +27,22 @@
             background-color: var(--paper-red-400) !important;
         }
     </style>
+    <!-- <dom-bind> -->
+    <template is="dom-repeat" items="{{allReserve}}">
+      <div class="card">
+          <div>
+              <h1>rid[[item.rid]][[randomId]]</h1>
+              <p>Charge Point [[item.cpid]] Connector [[item.connectorId]]</p>
+              <p>Status : [[item.status]]</p>
+              <p>Expiry Date : [[item.expiryDate]]</p>
+              <template is="dom-if" if="{{isAccepted(item.status)}}">
+                <p align="center"><paper-button dialog-confirm id="[[item.rid]]" class="red" on-click="sendCancle">ยกเลิก</paper-button></p>
+              </template>
+          </div>
+      </div>
+    </template>
+    <!-- </dom-bind> -->
 
-    <div class="card">
-        <!-- <google-map id="reserve" api-key="AIzaSyCYjysZzUoJZnWwvcztEqnXaYKsZniP0-E"></google-map> -->
-        <div>
-            <h1>EV News 1</h1>
-            <p>Status : </p>
-            <p>Expiry Date : </p>
-            <p align="center">
-                <paper-button dialog-confirm class="red" align="right" on-click="sendReserve">ยกเลิก</paper-button>
-            </p>
-        </div>
-    </div>
 
   </template>
 
@@ -46,15 +51,53 @@
       static get is() { return 'my-reserve'; }
       static get properties() {
         return {
-          allReserve:{
-            type:Object
-          }
+          randomId: {
+            value: Math.random().toString(36).substring(10)
+          },
+          // isAccepted:{
+          //   value:function(stat){
+          //     if(stat == "Accepted"){
+          //       return true;
+          //     }
+          //     console.log("test");
+          //     return true;
+          //   }
+          // }
+          // allReserve:{
+          //   observers:'_pushReserve()'
+          // }
         };
+      }
+
+      static get observers() {
+        return [
+            '_pushReserve()'
+        ]
       }
 
       ready(){
         super.ready();
-        fb.showReservationStatus(localStorage.getItem("idTag"));
+        //this._pushReserve();
+      }
+
+      isAccepted(stat){
+        if(stat == "Accepted"){
+          return true;
+        }
+        return false;
+      }
+
+      _pushReserve(){
+        fb.showReservationStatus( localStorage.getItem("idTag") , (childData) => {
+          this.allReserve = childData;
+          //console.log(this.allReserve);
+        });
+        //console.log(this.allReserve);
+      }
+
+      sendCancle(e){
+        //console.log(e.model.item.rid);
+        fb.cancleReservation(e.model.item.rid)
       }
 
     }

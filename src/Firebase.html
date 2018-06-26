@@ -89,16 +89,26 @@
         }
         
         //Show All Reservation on myReserve
-        showReservationStatus(idTag){
-            var ref = fb.db().ref('/reservation').orderByChild('idTag').equalTo(idTag);
+        showReservationStatus(idTag,callback){
+            var ref = fb.db().ref('/reservation').orderByChild('idTag').equalTo(idTag).limitToLast(3);
             
-            ref.once('value').then( (snapshot) => {
+            ref.on('value', (snapshot) => {
+                var arrayReserve = [];
                 snapshot.forEach((childSnapshot) => {
-                    var reservationId = parseInt(childSnapshot.key)+1;
+                    var reservationId = parseInt(childSnapshot.key);
                     var childval = childSnapshot.val();
-                    console.log(childval);
+                    childval.rid = reservationId;
+                    arrayReserve.push(childval);
                 });
+                callback(arrayReserve.reverse());
             },function (error) { console.log("Error: " + error.code);});
+        }
+
+        cancleReservation(reserveId){
+            var ref = fb.db().ref('/reservation').child(reserveId);
+            ref.update({
+                    status : "Canceling",
+            });
         }
     }
 
