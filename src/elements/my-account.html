@@ -47,12 +47,18 @@
     </paper-dialog>
 
     <div class="card">
-      <div class="circle">3</div>
+      <!-- <div class="circle">3</div> -->
       <h1>Account</h1>
-      <p>Email : [[email_user]]</p>
-      <p>Id tag : [[id_tag_user]]</p><hr/>
+      <p>Name : [[data.name]]</p>
+      <p>Email : [[data.email]]</p>
+      <p>IdTag : [[data.tag]]</p>
+      <p>ExpiryDate : [[data.exp]]</p>
+      <!-- <hr/> -->
+    </div>
+
+    <div class="card">
       <h1>Billing</h1>
-      <p>จำนวนเงินคงเหลือ : [[myamount]]</p>
+      <p>จำนวนเงินคงเหลือ : [[data.amount]]</p>
       <paper-button class="blue" on-click="openPaymentbox">เติมเงิน</paper-button>
     </div>
 
@@ -64,15 +70,6 @@
 
       static get properties() {
         return {
-          myamount: {
-            type: Number
-          },
-          email_user: {
-            type: String
-          },
-          id_tag_user: {
-            type: String
-          },
           cname: String,
           cardid: String,
           expy: String,
@@ -85,6 +82,7 @@
       ready() {
         super.ready();
         this.displayAcc();
+        
       }
 
       openPaymentbox() {
@@ -151,10 +149,9 @@
       }
 
       displayAcc() {
-        fb.displayData(data => {
-            this.email_user = data.email,
-            this.myamount = data.amount,
-            this.id_tag_user = data.tag
+        fb.displayData(localStorage.getItem("email"),data => {
+            this.data = data
+            //console.log(this.data);
         });
       }
 

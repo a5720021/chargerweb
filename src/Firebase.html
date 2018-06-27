@@ -57,12 +57,18 @@
         }
 
         //Show Value used in myaccount
-        displayData(callback) {
-            var email_user = localStorage.getItem("email");
+        displayData(email_user,callback) {
+            //var email_user = localStorage.getItem("email");
             if (localStorage.getItem("email") != null || localStorage.getItem("email") != undefined) {
                 fb.db().ref('authorize').orderByChild('email').equalTo(email_user).on('value', function (snapshot) {
                     snapshot.forEach(function (childSnapshot) {
-                        callback({ tag: childSnapshot.key, email: childSnapshot.val().email, amount: childSnapshot.val().amount });
+                        var childVal = childSnapshot.val();
+                        callback({ tag: childSnapshot.key, 
+                            email: childVal.email, 
+                            amount: childVal.amount ,
+                            name: childVal.name,
+                            exp: childVal.expiredate
+                        });
                     });
                 });
             }
